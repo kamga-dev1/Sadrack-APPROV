@@ -47,14 +47,17 @@ router.post('/', async (req, res) => {
 
 // PUT /api/fournisseurs/:id
 router.put('/:id', async (req, res) => {
-  const { nom, contact_nom, telephone, email, adresse, conditions_paiement, delai_livraison_moyen, note, statut } = req.body;
+  const { nom, contact_nom, telephone, email, adresse, 
+          conditions_paiement, delai_livraison_moyen, note, statut } = req.body;
   try {
     await db.query(
       `UPDATE fournisseurs SET
         nom=?, contact_nom=?, telephone=?, email=?, adresse=?,
-        conditions_paiement=?, delai_livraison_moyen=?, note=?, statut=?
+        conditions_paiement=?, delai_livraison_moyen=?, note=?, 
+        statut=COALESCE(?, statut)
        WHERE id_fournisseur=?`,
-      [nom, contact_nom, telephone, email, adresse, conditions_paiement, delai_livraison_moyen, note, statut, req.params.id]
+      [nom, contact_nom, telephone, email, adresse, 
+       conditions_paiement, delai_livraison_moyen, note, statut, req.params.id]
     );
     res.json({ success: true, message: 'Fournisseur mis à jour' });
   } catch (err) {
