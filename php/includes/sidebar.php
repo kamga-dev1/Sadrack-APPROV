@@ -1,89 +1,59 @@
 <?php
-$current_page = basename($_SERVER['PHP_SELF']);
-$role = $_SESSION['user']['role'] ?? '';
-
-function isActive(string $page, string $current): string {
-    return $page === $current ? 'active' : '';
-}
+$current = basename($_SERVER['PHP_SELF']);
+$role    = $_SESSION['user']['role'] ?? '';
+function sa($page, $cur){ return $page === $cur ? ' active' : ''; }
 ?>
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
 
-<nav id="sidebar" class="sidebar">
-    <div class="sidebar-sticky">
+  <div class="side-section">
+    <a href="/SADRACK-APPROV/php/dashboard.php" class="side-item<?= sa('dashboard.php',$current) ?>">
+      <i class="fas fa-gauge-high"></i>Tableau de bord
+    </a>
+  </div>
 
-        <!-- MENU PRINCIPAL -->
-        <ul class="nav flex-column pt-2">
+  <div class="side-section">
+    <span class="side-label">Achats</span>
+    <a href="/SADRACK-APPROV/php/fournisseurs.php" class="side-item<?= sa('fournisseurs.php',$current) ?>">
+      <i class="fas fa-building"></i>Fournisseurs
+    </a>
+    <a href="/SADRACK-APPROV/php/articles.php" class="side-item<?= sa('articles.php',$current) ?>">
+      <i class="fas fa-box"></i>Articles
+      <span class="side-badge" id="side-alert-badge" style="display:none"></span>
+    </a>
+    <a href="/SADRACK-APPROV/php/commandes.php" class="side-item<?= sa('commandes.php',$current) ?>">
+      <i class="fas fa-file-invoice"></i>Commandes
+    </a>
+  </div>
 
-            <li class="nav-item">
-                <a class="nav-link <?= isActive('dashboard.php', $current_page) ?>" href="/php/dashboard.php">
-                    <i class="fas fa-gauge-high me-2"></i>
-                    Tableau de bord
-                </a>
-            </li>
+  <div class="side-section">
+    <span class="side-label">Logistique</span>
+    <a href="/SADRACK-APPROV/php/receptions.php" class="side-item<?= sa('receptions.php',$current) ?>">
+      <i class="fas fa-truck-fast"></i>Réceptions
+    </a>
+    <a href="/SADRACK-APPROV/php/stock.php" class="side-item<?= sa('stock.php',$current) ?>">
+      <i class="fas fa-warehouse"></i>Stock
+    </a>
+  </div>
 
-            <li class="sidebar-divider">ACHATS</li>
+  <div class="side-section">
+    <span class="side-label">Finance</span>
+    <a href="/SADRACK-APPROV/php/paiements.php" class="side-item<?= sa('paiements.php',$current) ?>">
+      <i class="fas fa-money-bill-wave"></i>Paiements
+    </a>
+  </div>
 
-            <li class="nav-item">
-                <a class="nav-link <?= isActive('fournisseurs.php', $current_page) ?>" href="/php/fournisseurs.php">
-                    <i class="fas fa-building me-2"></i>
-                    Fournisseurs
-                </a>
-            </li>
+  <?php if ($role === 'admin'): ?>
+  <div class="side-section">
+    <span class="side-label">Administration</span>
+    <a href="/SADRACK-APPROV/php/utilisateurs.php" class="side-item<?= sa('utilisateurs.php',$current) ?>">
+      <i class="fas fa-users-gear"></i>Utilisateurs
+    </a>
+  </div>
+  <?php endif; ?>
 
-            <li class="nav-item">
-                <a class="nav-link <?= isActive('articles.php', $current_page) ?>" href="/php/articles.php">
-                    <i class="fas fa-box me-2"></i>
-                    Articles
-                </a>
-            </li>
+</aside>
 
-            <li class="nav-item">
-                <a class="nav-link <?= isActive('commandes.php', $current_page) ?>" href="/php/commandes.php">
-                    <i class="fas fa-file-invoice me-2"></i>
-                    Commandes
-                </a>
-            </li>
-
-            <li class="sidebar-divider">LOGISTIQUE</li>
-
-            <li class="nav-item">
-                <a class="nav-link <?= isActive('receptions.php', $current_page) ?>" href="/php/receptions.php">
-                    <i class="fas fa-truck me-2"></i>
-                    Réceptions
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link <?= isActive('stock.php', $current_page) ?>" href="/php/stock.php">
-                    <i class="fas fa-warehouse me-2"></i>
-                    Stock
-                </a>
-            </li>
-
-            <li class="sidebar-divider">FINANCE</li>
-
-            <li class="nav-item">
-                <a class="nav-link <?= isActive('paiements.php', $current_page) ?>" href="/php/paiements.php">
-                    <i class="fas fa-money-bill-wave me-2"></i>
-                    Paiements
-                </a>
-            </li>
-
-            <?php if ($role === 'admin'): ?>
-            <li class="sidebar-divider">ADMINISTRATION</li>
-
-            <li class="nav-item">
-                <a class="nav-link <?= isActive('utilisateurs.php', $current_page) ?>" href="/php/utilisateurs.php">
-                    <i class="fas fa-users-gear me-2"></i>
-                    Utilisateurs
-                </a>
-            </li>
-            <?php endif; ?>
-
-        </ul>
-    </div>
-</nav>
-
-<!-- CONTENU PRINCIPAL -->
-<main class="main-content flex-grow-1">
-    <!-- Zone alertes -->
-    <div id="alert-zone" class="px-4 pt-3"></div>
+<!-- ══ MAIN ══ -->
+<main class="main-content">
+<div id="alert-zone"></div>
