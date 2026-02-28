@@ -160,7 +160,7 @@ body{
   border:1.5px solid rgba(255,255,255,0.1);
   border-radius:9px;
   font-family:inherit;font-size:0.83rem;color:#fff;
-  outline:none;transition:all 0.2s;-webkit-appearance:none;
+  outline:none;transition:all 0.2s;appearance:none;-webkit-appearance:none;
 }
 .fi::placeholder{color:rgba(255,255,255,0.17);}
 .fi:focus{

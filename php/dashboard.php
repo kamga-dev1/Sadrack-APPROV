@@ -175,7 +175,7 @@ $role = htmlspecialchars($_SESSION['user']['role']);
 
 <script>
 const API='http://localhost:3000/api';
-document.getElementById('wdate').textContent=new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+document.getElementById('wdate').textContent=new globalThis.Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 
 async function loadAll(){
   const ri=document.getElementById('ri');ri.classList.add('fa-spin');

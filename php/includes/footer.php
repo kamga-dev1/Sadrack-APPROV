@@ -18,7 +18,7 @@ document.addEventListener('click',function(e){
 function showSuccess(msg){const z=document.getElementById('alert-zone');if(z){z.innerHTML=`<div class="al-ok"><i class="fas fa-circle-check"></i>${msg}</div>`;setTimeout(()=>z.innerHTML='',4000);}}
 function showError(msg){const z=document.getElementById('alert-zone');if(z){z.innerHTML=`<div class="al-err"><i class="fas fa-circle-xmark"></i>${msg}</div>`;}}
 function fmt(n){return Number(n||0).toLocaleString('fr-FR');}
-function fmtDate(d){return d?new Date(d).toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'}):'—';}
+function fmtDate(d){return d?new window.Date(d).toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'}):'—';}
 function statusBadge(s){
   const m={brouillon:['sb-muted','Brouillon'],en_attente:['sb-warn','En attente'],confirmee:['sb-info','Confirmée'],expediee:['sb-gold','Expédiée'],recue_partielle:['sb-warn','Reçue partielle'],recue_totale:['sb-ok','Reçue totale'],annulee:['sb-crit','Annulée'],actif:['sb-ok','Actif'],inactif:['sb-muted','Inactif'],suspendu:['sb-warn','Suspendu'],paye:['sb-ok','Payé'],en_retard:['sb-crit','En retard'],partielle:['sb-warn','Partielle'],complete:['sb-ok','Complète']};
   const[c,l]=m[s]||['sb-muted',s.replace(/_/g,' ')];
