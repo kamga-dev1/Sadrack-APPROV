@@ -230,7 +230,6 @@ body{
 
   <div class="sep"></div>
 
-  <div class="badge"><div class="bdot"></div><span class="btxt">Accès sécurisé</span></div>
   <h2 class="ttl">Connexion</h2>
   <p class="sub">Entrez vos identifiants pour accéder à votre espace.</p>
 
@@ -266,12 +265,6 @@ body{
       <div class="btn-ico"><i class="fas fa-arrow-right" id="bi"></i></div>
     </button>
   </form>
-
-  <div class="foot">
-    <div class="ssl"><div class="ssl-dot"></div>Connexion chiffrée SSL</div>
-    <div class="ver">v1.0</div>
-  </div>
-
 </div>
 
 <script>
