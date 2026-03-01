@@ -1,10 +1,12 @@
 <?php
 require_once 'includes/config.php';
-if(empty($_SESSION['user'])){header('Location: login.php');exit;}
-$_uid = $_SESSION['user']['id'] ?? $_SESSION['user']['id_utilisateur'] ?? 0;
+require_once 'includes/auth.php';
+requirePageAccess(); // Autorisé : admin, gestionnaire
+$_uid = currentUserId();
 ?>
 <?php require_once 'includes/header.php'; ?>
 <?php require_once 'includes/sidebar.php'; ?>
+<?php injectPermissions(); ?>
 <script>
   if(document.getElementById('nav-page-title'))
     document.getElementById('nav-page-title').textContent='Commandes';
@@ -177,7 +179,9 @@ $_uid = $_SESSION['user']['id'] ?? $_SESSION['user']['id_utilisateur'] ?? 0;
     <div class="ph-sub">Suivi des bons de commande fournisseurs</div>
   </div>
   <div class="ph-right">
+    <?php if(can('canCreate')): ?>
     <button class="btn-gold" onclick="openCreate()"><i class="fas fa-plus"></i> Nouvelle commande</button>
+    <?php endif; ?>
   </div>
 </div>
 
@@ -591,7 +595,7 @@ function render(){
       +'<td style="font-size:.82rem;">'+esc(c.createur||'—')+'</td>'
       +'<td><div class="c-actions" onclick="event.stopPropagation()">'
       +'<div class="act-btn view" title="Détail" onclick="openDetail('+c.id_commande+')"><i class="fas fa-eye"></i></div>'
-      +'<div class="act-btn edit" title="Statut"  onclick="openDetail('+c.id_commande+')"><i class="fas fa-pen"></i></div>'
+      +(PERMS.canChangeStatut ? '<div class="act-btn edit" title="Statut"  onclick="openDetail('+c.id_commande+')"><i class="fas fa-pen"></i></div>' : '')
       +'<div class="act-btn pdf"  title="Imprimer" onclick="printById('+c.id_commande+')"><i class="fas fa-print"></i></div>'
       +'</div></td></tr>';
   });

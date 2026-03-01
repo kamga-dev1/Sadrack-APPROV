@@ -1,10 +1,12 @@
 <?php
 require_once 'includes/config.php';
-if(empty($_SESSION['user'])){header('Location: login.php');exit;}
-$_uid = $_SESSION['user']['id'] ?? $_SESSION['user']['id_utilisateur'] ?? 0;
+require_once 'includes/auth.php';
+requirePageAccess(); // Autorisé : admin, gestionnaire, magasinier
+$_uid = currentUserId();
 ?>
 <?php require_once 'includes/header.php'; ?>
 <?php require_once 'includes/sidebar.php'; ?>
+<?php injectPermissions(); ?>
 <script>
   if(document.getElementById('nav-page-title'))
     document.getElementById('nav-page-title').textContent = 'Réceptions';
@@ -213,9 +215,11 @@ $_uid = $_SESSION['user']['id'] ?? $_SESSION['user']['id_utilisateur'] ?? 0;
     <div class="ph-sub">Enregistrement et suivi des livraisons fournisseurs</div>
   </div>
   <div class="ph-right">
+    <?php if(can('canCreate')): ?>
     <button class="btn-gold" onclick="openCreate()">
       <i class="fas fa-plus"></i> Nouvelle réception
     </button>
+    <?php endif; ?>
   </div>
 </div>
 

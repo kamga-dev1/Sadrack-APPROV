@@ -11,20 +11,26 @@ function _si($p,$c){return $p===$c?' on':'';}
   </div>
   <div class="s-section">
     <span class="s-label">Gestion Achats</span>
+    <?php if($_r2 !== 'magasinier'): ?>
     <a href="fournisseurs.php" class="s-item<?= _si('fournisseurs.php',$_cur) ?>"><i class="fas fa-building"></i>Fournisseurs</a>
+    <?php endif; ?>
     <a href="articles.php" class="s-item<?= _si('articles.php',$_cur) ?>"><i class="fas fa-cube"></i>Articles<span class="s-badge" id="side-badge" style="display:none"></span></a>
+    <?php if($_r2 !== 'magasinier'): ?>
     <a href="commandes.php" class="s-item<?= _si('commandes.php',$_cur) ?>"><i class="fas fa-file-contract"></i>Commandes</a>
+    <?php endif; ?>
   </div>
   <div class="s-section">
     <span class="s-label">Logistique</span>
     <a href="receptions.php" class="s-item<?= _si('receptions.php',$_cur) ?>"><i class="fas fa-truck-ramp-box"></i>Réceptions</a>
     <a href="stocks.php" class="s-item<?= _si('stocks.php',$_cur) ?>"><i class="fas fa-warehouse"></i>Stocks</a>
   </div>
+  <?php if($_r2 !== 'magasinier'): ?>
   <div class="s-section">
     <span class="s-label">Finance</span>
     <a href="paiements.php" class="s-item<?= _si('paiements.php',$_cur) ?>"><i class="fas fa-receipt"></i>Paiements</a>
   </div>
-  <?php if($_r2==='admin'): ?>
+  <?php endif; ?>
+  <?php if($_r2 === 'admin'): ?>
   <div class="s-section">
     <span class="s-label">Administration</span>
     <a href="utilisateurs.php" class="s-item<?= _si('utilisateurs.php',$_cur) ?>"><i class="fas fa-users-gear"></i>Utilisateurs</a>

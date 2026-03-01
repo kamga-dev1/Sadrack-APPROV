@@ -1,10 +1,12 @@
 <?php
 require_once 'includes/config.php';
-if(empty($_SESSION['user'])){header('Location: login.php');exit;}
-$_uid = $_SESSION['user']['id'] ?? $_SESSION['user']['id_utilisateur'] ?? 0;
+require_once 'includes/auth.php';
+requirePageAccess(); // Autorisé : admin, gestionnaire, magasinier
+$_uid = currentUserId();
 ?>
 <?php require_once 'includes/header.php'; ?>
 <?php require_once 'includes/sidebar.php'; ?>
+<?php injectPermissions(); ?>
 <script>
   if(document.getElementById('nav-page-title'))
     document.getElementById('nav-page-title').textContent = 'Stock';
@@ -223,9 +225,11 @@ $_uid = $_SESSION['user']['id'] ?? $_SESSION['user']['id_utilisateur'] ?? 0;
   <button class="tab-btn active" onclick="switchTab('mouvements',this)">
     <i class="fas fa-list-ul"></i> Mouvements
   </button>
+  <?php if(can('canCreate')): ?>
   <button class="tab-btn" onclick="switchTab('ajustement',this)">
     <i class="fas fa-sliders"></i> Ajustement manuel
   </button>
+  <?php endif; ?>
 </div>
 
 <!-- ════════════════ ONGLET MOUVEMENTS ════════════════ -->

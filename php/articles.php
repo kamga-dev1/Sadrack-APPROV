@@ -1,9 +1,11 @@
 <?php
 require_once 'includes/config.php';
-if(empty($_SESSION['user'])){header('Location: login.php');exit;}
+require_once 'includes/auth.php';
+requirePageAccess(); // Autorisé : admin, gestionnaire, magasinier
 ?>
 <?php require_once 'includes/header.php'; ?>
 <?php require_once 'includes/sidebar.php'; ?>
+<?php injectPermissions(); ?>
 <script>document.getElementById('nav-page-title').textContent='Articles';</script>
 
 <style>
@@ -147,7 +149,9 @@ if(empty($_SESSION['user'])){header('Location: login.php');exit;}
   </div>
   <div class="ph-right">
     <button class="btn-secondary" onclick="exportCSV()"><i class="fas fa-file-pdf"></i>Exporter PDF</button>
+    <?php if(can('canCreate')): ?>
     <button class="btn-gold" onclick="openCreate()"><i class="fas fa-plus"></i>Nouvel article</button>
+    <?php endif; ?>
   </div>
 </div>
 
@@ -202,7 +206,9 @@ if(empty($_SESSION['user'])){header('Location: login.php');exit;}
           <th onclick="sortBy('stock_actuel')">Stock <i class="fas fa-sort sort-ico"></i></th>
           <th onclick="sortBy('delai_approvisionnement')">Délai appro. <i class="fas fa-sort sort-ico"></i></th>
           <th onclick="sortBy('statut')">Statut <i class="fas fa-sort sort-ico"></i></th>
+          <?php if(can('canEdit') || can('canDelete')): ?>
           <th style="text-align:right;">Actions</th>
+          <?php endif; ?>
         </tr>
       </thead>
       <tbody id="tbl-body">
@@ -454,8 +460,9 @@ function render(){
 
   const slice=_shown.slice((_page-1)*PER,_page*PER);
   if(!slice.length){
+    const cols = (PERMS.canEdit || PERMS.isAdmin) ? 9 : 8;
     document.getElementById('tbl-body').innerHTML=
-      `<tr><td colspan="9"><div class="empty-state">
+      `<tr><td colspan="${cols}"><div class="empty-state">
         <div class="empty-ico"><i class="fas fa-cube"></i></div>
         <div class="empty-title">Aucun article trouvé</div>
         <div class="empty-text">${_all.length===0?'Commencez par créer un article.':'Aucun résultat pour cette recherche.'}</div>
@@ -486,12 +493,12 @@ function render(){
       </td>
       <td>${a.delai_approvisionnement!=null?`<span class="c-ref">${a.delai_approvisionnement}j</span>`:'—'}</td>
       <td>${badgeStatut(a.statut)}</td>
-      <td>
+      ${(PERMS.canEdit || PERMS.isAdmin) ? `<td>
         <div class="c-actions">
-          <div class="act-btn edit" title="Modifier" onclick="openEdit(${a.id_article})"><i class="fas fa-pen"></i></div>
-          <div class="act-btn deact" title="Désactiver" onclick="openDeact(${a.id_article},'${esc(a.nom)}')"><i class="fas fa-ban"></i></div>
+          ${PERMS.canEdit ? `<div class="act-btn edit" title="Modifier" onclick="openEdit(${a.id_article})"><i class="fas fa-pen"></i></div>` : ''}
+          ${PERMS.isAdmin ? `<div class="act-btn deact" title="Désactiver" onclick="openDeact(${a.id_article},'${esc(a.nom)}')"><i class="fas fa-ban"></i></div>` : ''}
         </div>
-      </td>
+      </td>` : ''}
     </tr>`;
   }).join('');
 

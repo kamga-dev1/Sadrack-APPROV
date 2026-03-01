@@ -1,10 +1,13 @@
 <?php
 require_once 'includes/config.php';
-if(empty($_SESSION['user'])){header('Location: login.php');exit;}
-$_uid = $_SESSION['user']['id'] ?? $_SESSION['user']['id_utilisateur'] ?? 0;
+require_once 'includes/auth.php';
+requirePageAccess(); // Autorisé : admin, gestionnaire
+$_uid  = currentUserId();
+$_role = currentRole();
 ?>
 <?php require_once 'includes/header.php'; ?>
 <?php require_once 'includes/sidebar.php'; ?>
+<?php injectPermissions(); ?>
 <script>
   if(document.getElementById('nav-page-title'))
     document.getElementById('nav-page-title').textContent = 'Paiements';
@@ -187,9 +190,11 @@ $_uid = $_SESSION['user']['id'] ?? $_SESSION['user']['id_utilisateur'] ?? 0;
     <div class="ph-sub">Suivi des factures et règlements fournisseurs</div>
   </div>
   <div class="ph-right">
+    <?php if(can('canCreate')): ?>
     <button class="btn-gold" onclick="openCreate()">
       <i class="fas fa-plus"></i> Nouvelle facture
     </button>
+    <?php endif; ?>
   </div>
 </div>
 
@@ -834,7 +839,7 @@ function render() {
       + '<td><div class="c-actions" onclick="event.stopPropagation()">'
       +   '<div class="act-btn view" title="Voir détail" onclick="openDetail(' + p.id_paiement + ')">'
       +     '<i class="fas fa-eye"></i></div>'
-      +   (p.statut !== 'paye' && p.statut !== 'annule'
+      +   (PERMS.canChangeStatut && p.statut !== 'paye' && p.statut !== 'annule'
           ? '<div class="act-btn pay" title="Enregistrer paiement" onclick="openPayer(' + p.id_paiement + ')">'
           +   '<i class="fas fa-circle-check"></i></div>'
           : '')

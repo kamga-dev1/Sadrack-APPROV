@@ -1,9 +1,11 @@
 <?php
 require_once 'includes/config.php';
-if(empty($_SESSION['user'])){header('Location: login.php');exit;}
+require_once 'includes/auth.php';
+requirePageAccess(); // Autorisé : admin, gestionnaire
 ?>
 <?php require_once 'includes/header.php'; ?>
 <?php require_once 'includes/sidebar.php'; ?>
+<?php injectPermissions(); ?>
 <script>document.getElementById('nav-page-title').textContent='Fournisseurs';</script>
 
 <style>
@@ -124,7 +126,9 @@ if(empty($_SESSION['user'])){header('Location: login.php');exit;}
   </div>
   <div class="ph-right">
     <button class="btn-secondary" onclick="exportCSV()"><i class="fas fa-file-pdf"></i>Exporter PDF</button>
+    <?php if(can('canCreate')): ?>
     <button class="btn-gold" onclick="openCreate()"><i class="fas fa-plus"></i>Nouveau fournisseur</button>
+    <?php endif; ?>
   </div>
 </div>
 
@@ -395,8 +399,8 @@ function render(){
       <td>${badgeStatut(f.statut)}</td>
       <td>
         <div class="cell-actions">
-          <div class="act-btn edit" title="Modifier" onclick="openEdit(${f.id_fournisseur})"><i class="fas fa-pen"></i></div>
-          <div class="act-btn deact" title="Désactiver" onclick="openDeact(${f.id_fournisseur},'${esc(f.nom)}')"><i class="fas fa-ban"></i></div>
+          ${PERMS.canEdit ? `<div class="act-btn edit" title="Modifier" onclick="openEdit(${f.id_fournisseur})"><i class="fas fa-pen"></i></div>` : ''}
+          ${PERMS.isAdmin ? `<div class="act-btn deact" title="Désactiver" onclick="openDeact(${f.id_fournisseur},'${esc(f.nom)}')"><i class="fas fa-ban"></i></div>` : ''}
         </div>
       </td>
     </tr>`).join('');

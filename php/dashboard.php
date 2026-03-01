@@ -1,11 +1,14 @@
 <?php
 require_once 'includes/config.php';
-if(empty($_SESSION['user'])){header('Location: login.php');exit;}
+require_once 'includes/auth.php';
+requirePageAccess(); // Autorisé : tous les rôles connectés
 $nom  = htmlspecialchars($_SESSION['user']['nom']);
 $role = htmlspecialchars($_SESSION['user']['role']);
 ?>
 <?php require_once 'includes/header.php'; ?>
 <?php require_once 'includes/sidebar.php'; ?>
+<?php injectPermissions(); ?>
+<?php renderFlash(); ?>
 <script>document.getElementById('nav-page-title').textContent='Vue d\'ensemble';</script>
 
 <style>
