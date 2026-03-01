@@ -23,10 +23,14 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const [reception] = await db.query(
-      `SELECT r.*, c.numero_commande, f.nom AS fournisseur_nom
+      `SELECT r.*,
+              c.numero_commande,
+              f.nom  AS fournisseur_nom,
+              u.nom  AS receptionnaire        -- ← manquait dans la version originale
        FROM receptions r
        JOIN commandes    c ON c.id_commande    = r.id_commande
        JOIN fournisseurs f ON f.id_fournisseur = c.id_fournisseur
+       JOIN utilisateurs u ON u.id_utilisateur = r.id_utilisateur
        WHERE r.id_reception = ?`,
       [req.params.id]
     );

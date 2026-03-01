@@ -51,13 +51,36 @@ router.post('/ajustement', async (req, res) => {
     if (article.length === 0)
       return res.status(404).json({ success: false, message: 'Article introuvable' });
 
-    const stock_avant = article[0].stock_actuel;
-    const stock_apres = type_mouvement === 'entree'
-      ? stock_avant + quantite
-      : stock_avant - quantite;
+    const stock_avant = parseFloat(article[0].stock_actuel);
+
+    /*
+      Convention type_mouvement (ENUM DB) :
+        entree      → stock + quantite          (réapprovisionnement, retour)
+        sortie      → stock - quantite          (consommation, perte)
+        ajustement  → stock + quantite          (correction positive, ex: erreur de comptage)
+        inventaire  → quantite = nouveau stock  (remise à zéro sur comptage physique)
+
+      Note : pour une sortie en ajustement, utiliser type 'sortie'.
+      Pour inventaire, la quantite saisie est la valeur réelle comptée.
+    */
+    let stock_apres;
+    switch (type_mouvement) {
+      case 'entree':
+      case 'ajustement':
+        stock_apres = stock_avant + quantite;
+        break;
+      case 'sortie':
+        stock_apres = stock_avant - quantite;
+        break;
+      case 'inventaire':
+        stock_apres = quantite;  // la quantité saisie = nouveau stock réel
+        break;
+      default:
+        return res.status(400).json({ success: false, message: `Type de mouvement invalide : ${type_mouvement}` });
+    }
 
     if (stock_apres < 0)
-      return res.status(400).json({ success: false, message: 'Stock insuffisant' });
+      return res.status(400).json({ success: false, message: `Stock insuffisant (stock actuel : ${stock_avant})` });
 
     await conn.query(
       'UPDATE articles SET stock_actuel = ? WHERE id_article = ?',
@@ -72,7 +95,12 @@ router.post('/ajustement', async (req, res) => {
     );
 
     await conn.commit();
-    res.json({ success: true, stock_avant, stock_apres, message: 'Ajustement effectué' });
+    res.json({
+      success: true,
+      stock_avant,
+      stock_apres,
+      message: 'Ajustement effectué'
+    });
   } catch (err) {
     await conn.rollback();
     res.status(500).json({ success: false, message: err.message });

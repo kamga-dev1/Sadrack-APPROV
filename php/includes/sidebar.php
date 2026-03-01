@@ -18,7 +18,7 @@ function _si($p,$c){return $p===$c?' on':'';}
   <div class="s-section">
     <span class="s-label">Logistique</span>
     <a href="receptions.php" class="s-item<?= _si('receptions.php',$_cur) ?>"><i class="fas fa-truck-ramp-box"></i>Réceptions</a>
-    <a href="stock.php" class="s-item<?= _si('stock.php',$_cur) ?>"><i class="fas fa-warehouse"></i>Stock</a>
+    <a href="stocks.php" class="s-item<?= _si('stocks.php',$_cur) ?>"><i class="fas fa-warehouse"></i>Stocks</a>
   </div>
   <div class="s-section">
     <span class="s-label">Finance</span>
